@@ -74,8 +74,10 @@ export const Scope3WaterfallChart = ({
                 dataKey="name"
                 tick={{ fontSize: 10 }}
                 interval={0}
-                height={50}
+                height={80}
                 tickLine={false}
+                angle={-45}
+                textAnchor="end"
               />
               <YAxis
                 tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`}

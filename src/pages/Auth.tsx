@@ -31,21 +31,22 @@ const Auth = () => {
     return (
       <div className="min-h-screen flex flex-col relative overflow-hidden">
         <MinimalBackground />
-        <header className="relative z-10 w-full px-6 py-4 flex items-center justify-between bg-white/50 backdrop-blur-sm border-b border-slate-100">
-          <a href="/">
-             <AlmacLogo className="h-10" />
+        <header className="relative z-10 w-full px-4 sm:px-6 py-3 flex items-center justify-between bg-white/50 backdrop-blur-sm border-b border-slate-100">
+          <a href="/" className="shrink-0">
+             <AlmacLogo className="h-7 sm:h-9 md:h-10" />
           </a>
-          <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" onClick={() => navigate('/')} className="flex items-center gap-2">
-              <Home className="h-4 w-4" />
-              Home
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Button variant="outline" size="sm" onClick={() => navigate('/')} className="flex items-center gap-1.5 h-8 sm:h-9 px-2 sm:px-3 text-xs sm:text-sm">
+              <Home className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Home</span>
             </Button>
             <button
               onClick={() => setView('login')}
-              className="text-sm hover:underline font-medium"
+              className="text-xs sm:text-sm hover:underline font-medium whitespace-nowrap"
               style={{ color: 'hsl(var(--primary))' }}
             >
-              Back to Sign In
+              <span className="hidden sm:inline">Back to Sign In</span>
+              <span className="sm:hidden">Sign In</span>
             </button>
           </div>
         </header>
@@ -66,24 +67,24 @@ const Auth = () => {
     <div className="min-h-screen flex flex-col relative overflow-hidden">
       <MinimalBackground />
 
-      <header className="relative z-10 w-full px-4 md:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white/50 backdrop-blur-sm border-b border-slate-100">
+      <header className="relative z-10 w-full px-3 sm:px-6 py-3 flex flex-row items-center justify-between gap-2 bg-white/50 backdrop-blur-sm border-b border-slate-100">
         <a href="/" className="shrink-0">
-          <AlmacLogo className="h-8 md:h-10" />
+          <AlmacLogo className="h-7 sm:h-9 md:h-10" />
         </a>
-        <div className="flex flex-wrap items-center justify-center gap-2 md:gap-4">
+        <div className="flex items-center gap-1.5 sm:gap-4">
           <Tabs value={view} onValueChange={(v) => setView(v as AuthView)} className="w-auto">
-            <TabsList className="bg-muted/50 backdrop-blur-sm">
-              <TabsTrigger value="login" className="data-[state=active]:bg-background text-xs sm:text-sm">
+            <TabsList className="bg-muted/50 backdrop-blur-sm p-0.5 h-8 sm:h-10">
+              <TabsTrigger value="login" className="data-[state=active]:bg-background text-[11px] sm:text-sm px-2 sm:px-4 py-1 h-full">
                 Sign In
               </TabsTrigger>
-              <TabsTrigger value="signup" className="data-[state=active]:bg-background text-xs sm:text-sm">
+              <TabsTrigger value="signup" className="data-[state=active]:bg-background text-[11px] sm:text-sm px-2 sm:px-4 py-1 h-full">
                 Register
               </TabsTrigger>
             </TabsList>
           </Tabs>
-          <Button variant="outline" size="sm" onClick={() => navigate('/')} className="flex items-center gap-2 text-xs sm:text-sm h-8 sm:h-9">
-            <Home className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            Home
+          <Button variant="outline" size="sm" onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3">
+            <Home className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Home</span>
           </Button>
         </div>
       </header>

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useDashboard } from '@/contexts/DashboardContext';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -54,6 +55,16 @@ export const IndustryBenchmarks = ({
   userIndustry
 }: IndustryBenchmarksProps) => {
   const { currencySymbol } = useDashboard();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Group benchmarks by industry
   const industries = [...new Set(benchmarks.map(b => b.industry))].sort();
@@ -112,6 +123,13 @@ export const IndustryBenchmarks = ({
     }))
   ];
 
+  const labelFormatter = (value: string) => {
+    if (isMobile && value.length > 10) {
+      return value.substring(0, 8) + '...';
+    }
+    return value;
+  };
+
   const ComparisonRow = ({ benchmark }: { benchmark: Benchmark }) => {
     const totalIntensity = (benchmark.avg_scope_1_intensity || 0) + 
                            (benchmark.avg_scope_2_intensity || 0) + 
@@ -121,37 +139,37 @@ export const IndustryBenchmarks = ({
     const percentDiff = totalIntensity > 0 ? (difference / totalIntensity * 100) : 0;
 
     return (
-      <div className="flex items-center justify-between py-3 border-b last:border-0 hover:bg-muted/50 px-2 rounded transition-colors">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b last:border-0 hover:bg-muted/50 px-2 rounded transition-colors gap-3 sm:gap-0">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex-shrink-0 flex items-center justify-center">
             <Building2 className="h-5 w-5 text-primary" />
           </div>
-          <div>
-            <div className="font-medium">{benchmark.company_name}</div>
-            <div className="text-xs text-muted-foreground flex items-center gap-2">
-              <span>{benchmark.industry}</span>
+          <div className="min-w-0">
+            <div className="font-medium truncate">{benchmark.company_name}</div>
+            <div className="text-xs text-muted-foreground flex flex-wrap items-center gap-1.5 sm:gap-2">
+              <span className="truncate">{benchmark.industry}</span>
               {benchmark.avg_cdp_score && (
-                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] sm:text-xs bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 flex-shrink-0">
                   CDP: {benchmark.avg_cdp_score}
                 </span>
               )}
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-6 text-right">
+        <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-6 text-right pl-[52px] sm:pl-0">
           <div>
-            <div className="font-semibold">{totalIntensity.toFixed(1)}</div>
-            <div className="text-xs text-muted-foreground">tCO₂e/M{currencySymbol}</div>
+            <div className="font-semibold text-sm sm:text-base">{totalIntensity.toFixed(1)}</div>
+            <div className="text-[10px] sm:text-xs text-muted-foreground">tCO₂e/M{currencySymbol}</div>
           </div>
-          <div className={`flex items-center gap-1 min-w-[100px] justify-end ${
+          <div className={`flex items-center gap-1 min-w-[80px] sm:min-w-[100px] justify-end text-sm sm:text-base ${
             isLower ? 'text-green-600' : difference > 0 ? 'text-red-600' : 'text-muted-foreground'
           }`}>
             {isLower ? (
-              <TrendingDown className="h-4 w-4" />
+              <TrendingDown className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             ) : difference > 0 ? (
-              <TrendingUp className="h-4 w-4" />
+              <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             ) : (
-              <Minus className="h-4 w-4" />
+              <Minus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             )}
             <span className="font-medium">
               {Math.abs(percentDiff).toFixed(0)}% {isLower ? 'better' : difference > 0 ? 'higher' : 'same'}
@@ -223,10 +241,10 @@ export const IndustryBenchmarks = ({
         <CardContent>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={intensityChartData} layout="vertical" margin={{ left: 80, right: 20 }}>
+              <BarChart data={intensityChartData} layout="vertical" margin={{ left: isMobile ? 0 : 20, right: 20, top: 10, bottom: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
-                <XAxis type="number" unit={` tCO₂e/M${currencySymbol}`} />
-                <YAxis type="category" dataKey="name" width={80} tick={{ fontSize: 12 }} />
+                <XAxis type="number" unit={` tCO₂e/M${currencySymbol}`} tick={{ fontSize: isMobile ? 10 : 12 }} />
+                <YAxis type="category" dataKey="name" width={isMobile ? 60 : 100} tick={{ fontSize: isMobile ? 10 : 12 }} tickFormatter={labelFormatter} />
                 <Tooltip 
                   formatter={(value: number) => [`${value.toFixed(2)} tCO₂e/M${currencySymbol}`, 'Intensity']}
                 />
@@ -253,12 +271,19 @@ export const IndustryBenchmarks = ({
         <CardContent>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={esgChartData} margin={{ left: 80, right: 20 }}>
+              <BarChart data={esgChartData} margin={{ left: isMobile ? 0 : 20, right: 20, top: 10, bottom: isMobile ? 30 : 10 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-                <YAxis domain={[0, 100]} />
+                <XAxis 
+                  dataKey="name" 
+                  tick={{ fontSize: isMobile ? 9 : 11 }} 
+                  tickFormatter={labelFormatter}
+                  angle={isMobile ? -45 : 0}
+                  textAnchor={isMobile ? 'end' : 'middle'}
+                  height={isMobile ? 60 : 30}
+                />
+                <YAxis domain={[0, 100]} width={isMobile ? 30 : 40} tick={{ fontSize: isMobile ? 10 : 12 }} />
                 <Tooltip />
-                <Legend />
+                <Legend wrapperStyle={{ fontSize: isMobile ? 10 : 12 }} />
                 <Bar dataKey="CDP" fill="hsl(var(--chart-1))" name="CDP Score" />
                 <Bar dataKey="EcoVadis" fill="hsl(var(--chart-2))" name="EcoVadis" />
                 <Bar dataKey="SBTi" fill="hsl(var(--chart-3))" name="SBTi %" />

@@ -27,6 +27,8 @@ interface SidebarProps {
   profile: Profile | null;
   onProfileUpdate: (profile: Profile) => void;
   isAdmin?: boolean;
+  isOpen: boolean;
+  onClose: () => void;
 }
 interface NavItem {
   id: TabType;
@@ -99,7 +101,9 @@ export const Sidebar = ({
   onTabChange,
   profile,
   onProfileUpdate,
-  isAdmin = false
+  isAdmin = false,
+  isOpen,
+  onClose
 }: SidebarProps) => {
   const {
     signOut
@@ -175,21 +179,40 @@ export const Sidebar = ({
       toast.success('Base year updated');
     }
   };
-  return <aside className="w-64 bg-sidebar text-sidebar-foreground flex flex-col fixed top-0 left-0 h-screen z-10">
-      {/* Logo & Company */}
-      <div className="p-6 border-b border-sidebar-border">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-0">
-            <span className="text-xl font-bold text-[#f0f0f0]">Carbonmash</span>
-            <span className="text-xl font-bold" style={{
-            color: '#00d084'
-          }}>.com</span>
+  return (
+    <>
+      {/* Backdrop overlay for mobile */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300 animate-fade-in cursor-pointer"
+          onClick={onClose}
+        />
+      )}
+
+      <aside className={cn(
+        "w-64 bg-sidebar text-sidebar-foreground flex flex-col fixed top-0 left-0 h-screen transition-transform duration-300 ease-in-out",
+        "z-50 lg:z-10",
+        isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+      )}>
+        {/* Logo & Company */}
+        <div className="p-6 border-b border-sidebar-border">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-0">
+              <span className="text-xl font-bold text-[#f0f0f0]">Carbonmash</span>
+              <span className="text-xl font-bold" style={{
+              color: '#00d084'
+            }}>.com</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <button onClick={() => window.location.href = '/'} className="p-1.5 rounded-md hover:bg-sidebar-accent transition-colors" title="Home">
+                <Home className="h-4 w-4 text-sidebar-foreground" />
+              </button>
+              <button onClick={onClose} className="p-1.5 rounded-md hover:bg-sidebar-accent transition-colors lg:hidden" title="Close menu">
+                <X className="h-4 w-4 text-sidebar-foreground" />
+              </button>
+            </div>
           </div>
-          <button onClick={() => window.location.href = '/'} className="p-1.5 rounded-md hover:bg-sidebar-accent transition-colors" title="Home">
-            <Home className="h-4 w-4 text-sidebar-foreground" />
-          </button>
         </div>
-      </div>
 
       {/* Base Year Setting */}
       <div className="px-4 py-3 border-b border-sidebar-border">
@@ -231,6 +254,7 @@ export const Sidebar = ({
                 onTabChange(item.id);
               } else {
                 onTabChange(item.id);
+                onClose();
               }
             }} className={cn("w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-300", isActive ? "bg-sidebar-primary text-sidebar-primary-foreground" : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground")}>
                   <item.icon className="h-5 w-5" />
@@ -245,7 +269,10 @@ export const Sidebar = ({
                 if (subItem.adminOnly && !isAdmin) return false;
                 return true;
               }).map((subItem) => <li key={subItem.id}>
-                        <button onClick={() => onTabChange(subItem.id)} className={cn("w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-200", activeTab === subItem.id ? "bg-sidebar-accent text-sidebar-foreground font-medium" : "text-sidebar-foreground/60 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground")}>
+                        <button onClick={() => {
+                          onTabChange(subItem.id);
+                          onClose();
+                        }} className={cn("w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-200", activeTab === subItem.id ? "bg-sidebar-accent text-sidebar-foreground font-medium" : "text-sidebar-foreground/60 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground")}>
                           <subItem.icon className="h-4 w-4" />
                           {subItem.label}
                         </button>
@@ -263,5 +290,7 @@ export const Sidebar = ({
           Sign Out
         </button>
       </div>
-    </aside>;
+      </aside>
+    </>
+  );
 };

@@ -184,7 +184,7 @@ export const OverviewTab = () => {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <KpiCard
           title="Total Emissions"
           value={totalEmissions.toLocaleString()}
@@ -241,8 +241,8 @@ export const OverviewTab = () => {
                   outerRadius={110}
                   paddingAngle={2}
                   dataKey="value"
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(1)}%`}
-                  labelLine={true}
+                  label={false}
+                  labelLine={false}
                 >
                   <Cell fill="hsl(var(--chart-1))" />
                   <Cell fill="hsl(var(--chart-2))" />

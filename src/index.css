@@ -117,3 +117,26 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Recharts Tooltip Custom styling for perfect Dark & Light mode integration */
+.recharts-default-tooltip {
+  background-color: hsl(var(--card)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  padding: 8px 12px !important;
+}
+
+.recharts-default-tooltip .recharts-tooltip-item {
+  color: hsl(var(--foreground)) !important;
+  font-family: inherit !important;
+  font-size: 0.875rem !important;
+}
+
+.recharts-default-tooltip .recharts-tooltip-label {
+  color: hsl(var(--foreground)) !important;
+  font-family: inherit !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  margin-bottom: 4px !important;
+}

@@ -17,30 +17,37 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner"; // Assuming sonner is installed/used for toasts
+import { useForm, ValidationError } from '@formspree/react';
 
 const ContactSalesModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-    const [formData, setFormData] = useState({
-        name: '',
-        companyName: '',
-        phoneNumber: '',
-        workEmail: ''
-    });
+    const [state, handleSubmit] = useForm(import.meta.env.VITE_FORMSPREE_ID || "xpqnrdob");
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        // Here you would typically send the data to your backend
-        console.log("Form Data Submitted:", formData);
-        toast.success("Request sent! We'll be in touch shortly.");
-        onClose();
-    };
+    if (state.succeeded) {
+        return (
+            <Dialog open={isOpen} onOpenChange={onClose}>
+                <DialogContent className="w-[90vw] sm:max-w-[425px] rounded-2xl p-6 text-center">
+                    <div className="bg-emerald-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-100">
+                        <Check className="h-8 w-8 text-emerald-600" />
+                    </div>
+                    <DialogHeader className="text-center">
+                        <DialogTitle className="text-2xl font-bold text-center text-slate-900">Request Sent!</DialogTitle>
+                        <DialogDescription className="text-center text-slate-600 mt-2">
+                            Thank you for reaching out. We have received your request for an enterprise quote and our sales team will contact you shortly.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="mt-6">
+                        <Button onClick={onClose} className="w-full">
+                            Close
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
+        );
+    }
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="w-[90vw] sm:max-w-[425px] max-h-[90vh] overflow-y-auto rounded-2xl">
                 <DialogHeader>
                     <DialogTitle>Contact Sales</DialogTitle>
                     <DialogDescription>
@@ -48,16 +55,19 @@ const ContactSalesModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="grid gap-4 py-4">
+                    {/* Formspree Branding Fields */}
+                    <input type="hidden" name="_subject" value="New Sales Inquiry - Carbonmash Pricing" />
+                    <input type="hidden" name="_org" value="Carbonmash Carbon Intelligence" />
+
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
                         <Input
                             id="name"
                             name="name"
                             placeholder="John Doe"
-                            value={formData.name}
-                            onChange={handleChange}
                             required
                         />
+                        <ValidationError prefix="Name" field="name" errors={state.errors} />
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="companyName">Company Name</Label>
@@ -65,10 +75,9 @@ const ContactSalesModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                             id="companyName"
                             name="companyName"
                             placeholder="Acme Inc."
-                            value={formData.companyName}
-                            onChange={handleChange}
                             required
                         />
+                        <ValidationError prefix="Company Name" field="companyName" errors={state.errors} />
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="phoneNumber">Phone Number</Label>
@@ -76,10 +85,9 @@ const ContactSalesModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                             id="phoneNumber"
                             name="phoneNumber"
                             placeholder="+1 (555) 000-0000"
-                            value={formData.phoneNumber}
-                            onChange={handleChange}
                             required
                         />
+                        <ValidationError prefix="Phone Number" field="phoneNumber" errors={state.errors} />
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="workEmail">Work Email</Label>
@@ -88,13 +96,14 @@ const ContactSalesModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                             name="workEmail"
                             type="email"
                             placeholder="john@acme.com"
-                            value={formData.workEmail}
-                            onChange={handleChange}
                             required
                         />
+                        <ValidationError prefix="Work Email" field="workEmail" errors={state.errors} />
                     </div>
                     <div className="flex justify-end mt-4">
-                        <Button type="submit">Submit Request</Button>
+                        <Button type="submit" disabled={state.submitting}>
+                            {state.submitting ? "Submitting..." : "Submit Request"}
+                        </Button>
                     </div>
                 </form>
             </DialogContent>
@@ -249,7 +258,9 @@ const Pricing = () => {
     return (
         <div className="relative min-h-screen flex flex-col">
             <MinimalBackground />
-            <ContactSalesModal isOpen={isContactModalOpen} onClose={() => setIsContactModalOpen(false)} />
+            {isContactModalOpen && (
+                <ContactSalesModal isOpen={isContactModalOpen} onClose={() => setIsContactModalOpen(false)} />
+            )}
 
             {/* Header */}
             <header className="w-full px-6 py-4 flex items-center justify-between bg-white/50 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100/50">
@@ -261,9 +272,10 @@ const Pricing = () => {
                         variant="ghost"
                         size="sm"
                         onClick={() => navigate('/')}
-                        className="hidden md:flex items-center gap-2 text-slate-600 hover:text-primary hover:bg-primary/5"
+                        className="flex items-center gap-2 text-slate-600 hover:text-primary hover:bg-primary/5"
                     >
-                        <ArrowLeft className="h-4 w-4" /> Back to Home
+                        <ArrowLeft className="h-4 w-4" />
+                        <span className="hidden sm:inline">Back to Home</span>
                     </Button>
                     <Button
                         size="sm"

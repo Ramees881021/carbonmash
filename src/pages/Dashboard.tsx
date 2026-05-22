@@ -42,6 +42,7 @@ const DashboardContent = () => {
   const [activeTab, setActiveTab] = useState<TabType>('organisation');
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Reset to valid tab when switching modes
   useEffect(() => {
@@ -107,18 +108,20 @@ const DashboardContent = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-background overflow-x-hidden">
       <Sidebar 
         activeTab={activeTab} 
         onTabChange={setActiveTab}
         profile={profile}
         onProfileUpdate={handleProfileUpdate}
         isAdmin={isAdmin}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
       />
-      <div className="flex-1 flex flex-col ml-64">
-        <DashboardHeader />
+      <div className="flex-1 flex flex-col ml-0 lg:ml-64 min-w-0">
+        <DashboardHeader onMenuClick={() => setIsSidebarOpen(true)} />
         <main className={cn(
-          "flex-1 p-6 overflow-auto transition-all duration-300",
+          "flex-1 p-4 sm:p-6 overflow-auto transition-all duration-300",
           "animate-fade-in"
         )}>
           {activeTab === 'organisation' && <OrganisationTab />}

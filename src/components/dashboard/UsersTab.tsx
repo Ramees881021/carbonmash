@@ -128,104 +128,106 @@ export const UsersTab = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>User Name</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Joined</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {users.map((userProfile) => {
-                const role = getUserRole(userProfile.user_id);
-                const isCurrentUser = userProfile.user_id === user?.id;
+          <div className="overflow-x-auto w-full">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>User Name</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Joined</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {users.map((userProfile) => {
+                  const role = getUserRole(userProfile.user_id);
+                  const isCurrentUser = userProfile.user_id === user?.id;
 
-                return (
-                  <TableRow key={userProfile.id}>
-                    <TableCell className="font-medium">
-                      {userProfile.email || 'No email'}
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={role === 'admin' ? 'default' : 'secondary'}>
-                        {role === 'admin' ? (
-                          <><Shield className="h-3 w-3 mr-1" /> Admin</>
+                  return (
+                    <TableRow key={userProfile.id}>
+                      <TableCell className="font-medium">
+                        {userProfile.email || 'No email'}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={role === 'admin' ? 'default' : 'secondary'}>
+                          {role === 'admin' ? (
+                            <><Shield className="h-3 w-3 mr-1" /> Admin</>
+                          ) : (
+                            <><UserIcon className="h-3 w-3 mr-1" /> User</>
+                          )}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {userProfile.is_approved ? (
+                          <Badge variant="outline" className="bg-green-500/10 text-green-500">Approved</Badge>
                         ) : (
-                          <><UserIcon className="h-3 w-3 mr-1" /> User</>
+                          <Badge variant="outline" className="bg-yellow-500/10 text-yellow-500">Pending</Badge>
                         )}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {userProfile.is_approved ? (
-                        <Badge variant="outline" className="bg-green-500/10 text-green-500">Approved</Badge>
-                      ) : (
-                        <Badge variant="outline" className="bg-yellow-500/10 text-yellow-500">Pending</Badge>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {new Date(userProfile.created_at).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell className="text-right space-x-2">
-                      {!isCurrentUser && (
-                        <>
-                          <Button
-                            variant={userProfile.is_approved ? "secondary" : "default"}
-                            size="sm"
-                            onClick={() => toggleApproval(userProfile.user_id, userProfile.id, userProfile.is_approved)}
-                            disabled={approving === userProfile.user_id}
-                          >
-                            {approving === userProfile.user_id ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                            ) : userProfile.is_approved ? (
-                              <><XCircle className="h-4 w-4 mr-1" /> Revoke</>
-                            ) : (
-                              <><CheckCircle className="h-4 w-4 mr-1" /> Approve</>
-                            )}
-                          </Button>
+                      </TableCell>
+                      <TableCell>
+                        {new Date(userProfile.created_at).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell className="text-right space-x-2">
+                        {!isCurrentUser && (
+                          <>
+                            <Button
+                              variant={userProfile.is_approved ? "secondary" : "default"}
+                              size="sm"
+                              onClick={() => toggleApproval(userProfile.user_id, userProfile.id, userProfile.is_approved)}
+                              disabled={approving === userProfile.user_id}
+                            >
+                              {approving === userProfile.user_id ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : userProfile.is_approved ? (
+                                <><XCircle className="h-4 w-4 mr-1" /> Revoke</>
+                              ) : (
+                                <><CheckCircle className="h-4 w-4 mr-1" /> Approve</>
+                              )}
+                            </Button>
 
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button
-                                variant="destructive"
-                                size="sm"
-                                disabled={deleting === userProfile.user_id}
-                              >
-                                {deleting === userProfile.user_id ? (
-                                  <Loader2 className="h-4 w-4 animate-spin" />
-                                ) : (
-                                  <><Trash2 className="h-4 w-4 mr-1" /> Remove</>
-                                )}
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>Remove User</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  Are you sure you want to remove {userProfile.email || userProfile.company_name}? 
-                                  This will delete all their data permanently.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction
-                                  onClick={() => deleteUser(userProfile.user_id, userProfile.id)}
-                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button
+                                  variant="destructive"
+                                  size="sm"
+                                  disabled={deleting === userProfile.user_id}
                                 >
-                                  Remove
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+                                  {deleting === userProfile.user_id ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  ) : (
+                                    <><Trash2 className="h-4 w-4 mr-1" /> Remove</>
+                                  )}
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Remove User</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Are you sure you want to remove {userProfile.email || userProfile.company_name}? 
+                                    This will delete all their data permanently.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    onClick={() => deleteUser(userProfile.user_id, userProfile.id)}
+                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                  >
+                                    Remove
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

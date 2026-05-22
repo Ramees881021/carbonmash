@@ -52,102 +52,105 @@ const Index = () => {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 w-full px-4 md:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white/50 backdrop-blur-sm border-b border-slate-100"
+        className="relative z-50 w-full px-4 md:px-6 py-3 md:py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/50 backdrop-blur-sm border-b border-slate-100"
       >
-        <motion.a 
-          href="/" 
-          className="shrink-0"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <AlmacLogo className="h-8 md:h-10" />
-        </motion.a>
-        <div className="flex flex-wrap items-center justify-center gap-2 md:gap-4">
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, staggerChildren: 0.1 }}
-            className="hidden md:flex items-center gap-3"
+        <div className="flex flex-row items-center justify-between w-full md:w-auto">
+          <motion.a 
+            href="/" 
+            className="shrink-0"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
-              <Button variant="ghost" size="sm" onClick={() => navigate('/contact')} className="text-slate-600 transition-colors">
-                Contact Us
-              </Button>
-            </motion.div>
-            <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
-              <Button variant="ghost" size="sm" onClick={() => navigate('/tools-and-services')} className="text-slate-600 transition-colors">
-                Tools & Services
-              </Button>
-            </motion.div>
-            <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
-              <Button variant="ghost" size="sm" onClick={() => navigate('/pricing')} className="text-slate-600 transition-colors">
-                Pricing
-              </Button>
-            </motion.div>
-            <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
-              <Button variant="outline" size="sm" onClick={() => navigate('/auth')} className="hover:bg-primary hover:text-white border-slate-200 text-slate-700">
-                Sign In
-              </Button>
-            </motion.div>
-            <motion.div whileHover={{ y: -2, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button size="sm" onClick={() => navigate('/auth?tab=signup')} className="flex items-center gap-2 shadow-md hover:shadow-lg transition-all">
-                Get Started <ArrowRight className="h-4 w-4" />
-              </Button>
-            </motion.div>
-          </motion.div>
+            <AlmacLogo className="h-8 md:h-10" />
+          </motion.a>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            className="md:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
 
-      {/* Mobile Menu Toggle */}
-      <button
-        className="md:hidden p-2 text-slate-600"
-        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-      >
-        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
-
-      {/* Mobile Navigation Overlay */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full left-0 right-0 bg-white border-b border-slate-100 shadow-lg p-4 flex flex-col gap-4 md:hidden"
-          >
-            <Button variant="ghost" className="w-full justify-start text-slate-600" onClick={() => {
-              navigate('/contact');
-              setIsMobileMenuOpen(false);
-            }}>
+        {/* Desktop Navigation */}
+        <motion.div 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, staggerChildren: 0.1 }}
+          className="hidden md:flex items-center gap-3"
+        >
+          <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
+            <Button variant="ghost" size="sm" onClick={() => navigate('/contact')} className="text-slate-600 transition-colors">
               Contact Us
             </Button>
-            <Button variant="ghost" className="w-full justify-start text-slate-600" onClick={() => {
-              navigate('/tools-and-services');
-              setIsMobileMenuOpen(false);
-            }}>
+          </motion.div>
+          <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
+            <Button variant="ghost" size="sm" onClick={() => navigate('/tools-and-services')} className="text-slate-600 transition-colors">
               Tools & Services
             </Button>
-            <Button variant="ghost" className="w-full justify-start text-slate-600" onClick={() => {
-              navigate('/pricing');
-              setIsMobileMenuOpen(false);
-            }}>
+          </motion.div>
+          <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
+            <Button variant="ghost" size="sm" onClick={() => navigate('/pricing')} className="text-slate-600 transition-colors">
               Pricing
             </Button>
-            <Button variant="outline" className="w-full justify-start" onClick={() => {
-              navigate('/auth');
-              setIsMobileMenuOpen(false);
-            }}>
+          </motion.div>
+          <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
+            <Button variant="outline" size="sm" onClick={() => navigate('/auth')} className="hover:bg-primary hover:text-white border-slate-200 text-slate-700">
               Sign In
             </Button>
-            <Button className="w-full justify-start flex items-center gap-2" onClick={() => {
-              navigate('/auth?tab=signup');
-              setIsMobileMenuOpen(false);
-            }}>
+          </motion.div>
+          <motion.div whileHover={{ y: -2, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button size="sm" onClick={() => navigate('/auth?tab=signup')} className="flex items-center gap-2 shadow-md hover:shadow-lg transition-all">
               Get Started <ArrowRight className="h-4 w-4" />
             </Button>
           </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.header>
+        </motion.div>
+
+        {/* Mobile Navigation List (Inline, pushes content down, placing it above the hero heading) */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              className="w-full flex flex-col gap-3 md:hidden overflow-hidden pb-2"
+            >
+              <Button variant="ghost" className="w-full justify-start text-slate-600 h-10 px-3 hover:bg-primary/10 hover:text-primary transition-colors" onClick={() => {
+                navigate('/contact');
+                setIsMobileMenuOpen(false);
+              }}>
+                Contact Us
+              </Button>
+              <Button variant="ghost" className="w-full justify-start text-slate-600 h-10 px-3 hover:bg-primary/10 hover:text-primary transition-colors" onClick={() => {
+                navigate('/tools-and-services');
+                setIsMobileMenuOpen(false);
+              }}>
+                Tools & Services
+              </Button>
+              <Button variant="ghost" className="w-full justify-start text-slate-600 h-10 px-3 hover:bg-primary/10 hover:text-primary transition-colors" onClick={() => {
+                navigate('/pricing');
+                setIsMobileMenuOpen(false);
+              }}>
+                Pricing
+              </Button>
+              <Button variant="outline" className="w-full justify-start h-10 px-3 border-slate-200 text-slate-700 hover:bg-primary/10 hover:text-primary transition-colors" onClick={() => {
+                navigate('/auth');
+                setIsMobileMenuOpen(false);
+              }}>
+                Sign In
+              </Button>
+              <Button className="w-full justify-start h-10 px-3 flex items-center gap-2" onClick={() => {
+                navigate('/auth?tab=signup');
+                setIsMobileMenuOpen(false);
+              }}>
+                Get Started <ArrowRight className="h-4 w-4" />
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.header>
 
     {/* Hero Section with Background Video */}
     <section className="relative min-h-[95vh] flex flex-col items-center justify-start pt-32 lg:pt-48 px-6 md:px-12 lg:px-20 overflow-hidden">

@@ -55,9 +55,10 @@ const ToolsAndServices = () => {
                         variant="ghost"
                         size="sm"
                         onClick={() => navigate('/')}
-                        className="hidden md:flex items-center gap-2 text-slate-600 hover:text-primary hover:bg-primary/5"
+                        className="flex items-center gap-2 text-slate-600 hover:text-primary hover:bg-primary/5"
                     >
-                        <ArrowLeft className="h-4 w-4" /> Back to Home
+                        <ArrowLeft className="h-4 w-4" />
+                        <span className="hidden sm:inline">Back to Home</span>
                     </Button>
                     <Button
                         size="sm"
