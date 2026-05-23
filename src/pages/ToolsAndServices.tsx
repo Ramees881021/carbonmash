@@ -60,13 +60,6 @@ const ToolsAndServices = () => {
                         <ArrowLeft className="h-4 w-4" />
                         <span className="hidden sm:inline">Back to Home</span>
                     </Button>
-                    <Button
-                        size="sm"
-                        onClick={() => navigate('/auth?tab=signup')}
-                        className="bg-primary hover:bg-primary/90 text-white shadow-md shadow-primary/20"
-                    >
-                        Get Started
-                    </Button>
                 </div>
             </header>
 

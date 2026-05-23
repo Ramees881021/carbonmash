@@ -100,11 +100,6 @@ const Index = () => {
               Sign In
             </Button>
           </motion.div>
-          <motion.div whileHover={{ y: -2, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <Button size="sm" onClick={() => navigate('/auth?tab=signup')} className="flex items-center gap-2 shadow-md hover:shadow-lg transition-all">
-              Get Started <ArrowRight className="h-4 w-4" />
-            </Button>
-          </motion.div>
         </motion.div>
 
         {/* Mobile Navigation List (Inline, pushes content down, placing it above the hero heading) */}
@@ -140,12 +135,6 @@ const Index = () => {
                 setIsMobileMenuOpen(false);
               }}>
                 Sign In
-              </Button>
-              <Button className="w-full justify-start h-10 px-3 flex items-center gap-2" onClick={() => {
-                navigate('/auth?tab=signup');
-                setIsMobileMenuOpen(false);
-              }}>
-                Get Started <ArrowRight className="h-4 w-4" />
               </Button>
             </motion.div>
           )}
