@@ -1,6 +1,14 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+
+export interface User {
+  id: string;
+  email: string | null;
+}
+
+export interface Session {
+  user: User | null;
+}
 
 const ADMIN_EMAIL = 'rameesraja.kn@gmail.com';
 
